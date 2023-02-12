@@ -1,0 +1,16 @@
+{
+  "name": "measure-pv",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "dependencies": {
+    "cron": "^2.2.0",
+    "tuyapi": "^7.5.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "exit 0"
+  },
+  "author": "",
+  "license": "ISC"
+}
