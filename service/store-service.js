@@ -1,21 +1,7 @@
 const { GoogleSpreadsheet } = require('google-spreadsheet');
-const configService = require('./config-service')
+const configService = require('./config-service');
 
-module.exports = {measure};
-
-async function measure(device) {
-    const now = new Date();
-    const data = await getData(device);
-    await store(now, data);
-    log(now, data);
-}
-
-async function getData(device) {
-    const power = await getPower(device);
-    const voltage = await getVoltage(device);
-    const current = await getCurrent(device);
-    return {power, voltage, current};
-}
+module.exports = {store};
 
 async function store(now, data) {
     const year = now.getFullYear() + '';
@@ -39,37 +25,11 @@ async function store(now, data) {
 
     await sheet.setHeaderRow(['Timestamp', 'Power in W', 'Voltage in V', 'Current in mA']);
     await sheet.addRow({
-        "Timestamp": toTimestamp(now),
+        "Timestamp": now.toISOString(),
         "Power in W": data.power,
         "Voltage in V": data.voltage,
         "Current in mA": data.current
     });
-}
-
-async function log(now, data) {
-    console.log(toTimestamp(now));
-    console.log('Power:', data.power, 'W');
-    console.log('Voltage:', data.voltage, 'V');
-    console.log('Current:', data.current, 'mA');
-    console.log();
-}
-
-function toTimestamp(date) {
-    return date.toISOString();
-}
-
-async function getVoltage(device) {
-    const voltage = await device.get({dps: 20});
-    return voltage / 10;
-}
-
-async function getCurrent(device) {
-    return await device.get({dps: 18});
-}
-
-async function getPower(device) {
-    const power = await device.get({dps: 19});
-    return power / 10;
 }
 
 function getSheetTitle(now) {
@@ -82,4 +42,3 @@ function getSheetTitle(now) {
     }
     return weekOfTheYear.toString();;
 }
-

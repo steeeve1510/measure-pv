@@ -1,8 +1,8 @@
 
 const TuyAPI = require('tuyapi');
 const CronJob = require('cron').CronJob;
-const configService = require('./config-service')
-const pvService = require('./pv-service')
+const configService = require('./service/config-service')
+const pvService = require('./service/pv-service')
 
 const config = configService.getConfig();
 const device = new TuyAPI({
