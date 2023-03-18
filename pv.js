@@ -2,15 +2,10 @@
 module.exports = {measure};
 
 async function measure(device, doc) {
-    const timestamp = getCurrentTimestamp();
+    const now = new Date();
     const data = await getData(device);
-    await store(timestamp, data, doc);
-    log(timestamp, data);
-}
-
-function getCurrentTimestamp() {
-    var d = new Date();
-    return d.toISOString();
+    await store(now, data, doc);
+    log(now, data);
 }
 
 async function getData(device) {
@@ -20,24 +15,32 @@ async function getData(device) {
     return {power, voltage, current};
 }
 
-async function store(timestamp, data, doc) {
+async function store(now, data, doc) {
     await doc.loadInfo();
-    const sheet = doc.sheetsByTitle['06'];
+    const sheetTitle = getSheetTitle(now);
+    var sheet = doc.sheetsByTitle[sheetTitle];
+    if (sheet == null) {
+        sheet = await doc.addSheet({ title: sheetTitle });
+    }
     await sheet.setHeaderRow(['Timestamp', 'Power in W', 'Voltage in V', 'Current in mA']);
     await sheet.addRow({
-        "Timestamp": timestamp,
+        "Timestamp": toTimestamp(now),
         "Power in W": data.power,
         "Voltage in V": data.voltage,
         "Current in mA": data.current
     });
 }
 
-async function log(timestamp, data) {
-    console.log(timestamp);
+async function log(now, data) {
+    console.log(toTimestamp(now));
     console.log('Power:', data.power, 'W');
     console.log('Voltage:', data.voltage, 'V');
     console.log('Current:', data.current, 'mA');
     console.log();
+}
+
+function toTimestamp(date) {
+    return date.toISOString();
 }
 
 async function getVoltage(device) {
@@ -54,10 +57,13 @@ async function getPower(device) {
     return power / 10;
 }
 
-function getWeekOfTheYear() {
-    var currentDate = new Date();
-    var startDate = new Date(currentDate.getFullYear(), 0, 1);
-    var days = Math.floor((currentDate - startDate) /
+function getSheetTitle(now) {
+    const startDate = new Date(now.getFullYear(), 0, 1);
+    const days = Math.floor((now - startDate) /
         (24 * 60 * 60 * 1000));
-    return Math.ceil(days / 7);
+    const weekOfTheYear = Math.ceil(days / 7);
+    if (weekOfTheYear < 10) {
+        return "0" + weekOfTheYear.toString();
+    }
+    return weekOfTheYear.toString();;
 }
