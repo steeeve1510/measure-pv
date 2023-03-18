@@ -16,7 +16,7 @@ const googleConfig = getGoogleConfig();
 const doc = new GoogleSpreadsheet(config.spreadsheet);
 
 var job = new CronJob(
-	'*/' + config.retryInterval + ' * * * * *',
+	config.cron,
 	async () => await pv.measure(device, doc)
 );
 

@@ -63,7 +63,7 @@ function getSheetTitle(now) {
         (24 * 60 * 60 * 1000));
     const weekOfTheYear = Math.ceil(days / 7);
     if (weekOfTheYear < 10) {
-        return "0" + weekOfTheYear.toString();
+        return '0' + weekOfTheYear.toString();
     }
     return weekOfTheYear.toString();;
 }
