@@ -20,9 +20,11 @@ async function store(now, data) {
     const sheetTitle = getSheetTitle(now);
     var sheet = doc.sheetsByTitle[sheetTitle];
     if (sheet == null) {
+        console.log('creating new sheet: ' + sheetTitle);
         sheet = await doc.addSheet({ title: sheetTitle });
     }
 
+    console.log('storing data...');
     await sheet.setHeaderRow(['Timestamp', 'Power in W', 'Voltage in V', 'Current in mA']);
     await sheet.addRow({
         "Timestamp": now.toISOString(),
@@ -30,6 +32,7 @@ async function store(now, data) {
         "Voltage in V": data.voltage,
         "Current in mA": data.current
     });
+    console.log('data stored');
 }
 
 function getSheetTitle(now) {
