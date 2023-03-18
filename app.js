@@ -1,9 +1,7 @@
 
 const TuyAPI = require('tuyapi');
-const { GoogleSpreadsheet } = require('google-spreadsheet');
 const CronJob = require('cron').CronJob;
 const fs = require('fs');
-
 const pv = require('./pv')
 
 const config = getConfig();
@@ -12,12 +10,9 @@ const device = new TuyAPI({
     key: config.key
 });
 
-const googleConfig = getGoogleConfig();
-const doc = new GoogleSpreadsheet(config.spreadsheet);
-
 var job = new CronJob(
 	config.cron,
-	async () => await pv.measure(device, doc)
+	async () => await pv.measure(device)
 );
 
 (async () => {
@@ -26,23 +21,11 @@ var job = new CronJob(
     await device.connect();
     console.log('connected to ammeter');
 
-    console.log('connecting to spreadsheet...');
-    await doc.useServiceAccountAuth({
-        client_email: googleConfig.client_email,
-        private_key: googleConfig.private_key,
-    });
-    console.log('connected to spreadsheet');
-
     console.log('starting cron-job...')
     job.start();
 })();
 
 function getConfig() {
     let rawConfig = fs.readFileSync('config.json');
-    return JSON.parse(rawConfig);
-}
-
-function getGoogleConfig() {
-    let rawConfig = fs.readFileSync('google-config.json');
     return JSON.parse(rawConfig);
 }

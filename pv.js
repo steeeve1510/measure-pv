@@ -1,10 +1,12 @@
+const { GoogleSpreadsheet } = require('google-spreadsheet');
+const fs = require('fs');
 
 module.exports = {measure};
 
-async function measure(device, doc) {
+async function measure(device) {
     const now = new Date();
     const data = await getData(device);
-    await store(now, data, doc);
+    await store(now, data);
     log(now, data);
 }
 
@@ -15,13 +17,26 @@ async function getData(device) {
     return {power, voltage, current};
 }
 
-async function store(now, data, doc) {
+async function store(now, data) {
+    const year = now.getFullYear() + '';
+    const config = getConfig();
+    const googleConfig = getGoogleConfig();
+    const doc = new GoogleSpreadsheet(config.spreadsheet[year]);
+
+    console.log('connecting to spreadsheet (' + year + ')...');
+    await doc.useServiceAccountAuth({
+        client_email: googleConfig.client_email,
+        private_key: googleConfig.private_key,
+    });
+    console.log('connected to spreadsheet');
+
     await doc.loadInfo();
     const sheetTitle = getSheetTitle(now);
     var sheet = doc.sheetsByTitle[sheetTitle];
     if (sheet == null) {
         sheet = await doc.addSheet({ title: sheetTitle });
     }
+
     await sheet.setHeaderRow(['Timestamp', 'Power in W', 'Voltage in V', 'Current in mA']);
     await sheet.addRow({
         "Timestamp": toTimestamp(now),
@@ -66,4 +81,14 @@ function getSheetTitle(now) {
         return '0' + weekOfTheYear.toString();
     }
     return weekOfTheYear.toString();;
+}
+
+function getConfig() {
+    let rawConfig = fs.readFileSync('config.json');
+    return JSON.parse(rawConfig);
+}
+
+function getGoogleConfig() {
+    let rawConfig = fs.readFileSync('google-config.json');
+    return JSON.parse(rawConfig);
 }
