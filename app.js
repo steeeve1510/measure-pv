@@ -21,14 +21,19 @@ var job = new CronJob(
 );
 
 (async () => {
+    console.log('connecting to ammeter...');
+    await device.find();
+    await device.connect();
+    console.log('connected to ammeter');
+
+    console.log('connecting to spreadsheet...');
     await doc.useServiceAccountAuth({
         client_email: googleConfig.client_email,
         private_key: googleConfig.private_key,
     });
+    console.log('connected to spreadsheet');
 
-    await device.find();
-    await device.connect();
-
+    console.log('starting cron-job...')
     job.start();
 })();
 
