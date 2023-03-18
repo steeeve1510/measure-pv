@@ -1,5 +1,5 @@
 const { GoogleSpreadsheet } = require('google-spreadsheet');
-const fs = require('fs');
+const configService = require('./config-service')
 
 module.exports = {measure};
 
@@ -19,8 +19,8 @@ async function getData(device) {
 
 async function store(now, data) {
     const year = now.getFullYear() + '';
-    const config = getConfig();
-    const googleConfig = getGoogleConfig();
+    const config = configService.getConfig();
+    const googleConfig = configService.getGoogleConfig();
     const doc = new GoogleSpreadsheet(config.spreadsheet[year]);
 
     console.log('connecting to spreadsheet (' + year + ')...');
@@ -83,12 +83,3 @@ function getSheetTitle(now) {
     return weekOfTheYear.toString();;
 }
 
-function getConfig() {
-    let rawConfig = fs.readFileSync('config.json');
-    return JSON.parse(rawConfig);
-}
-
-function getGoogleConfig() {
-    let rawConfig = fs.readFileSync('google-config.json');
-    return JSON.parse(rawConfig);
-}

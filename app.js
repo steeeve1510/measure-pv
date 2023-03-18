@@ -1,10 +1,10 @@
 
 const TuyAPI = require('tuyapi');
 const CronJob = require('cron').CronJob;
-const fs = require('fs');
-const pv = require('./pv')
+const configService = require('./config-service')
+const pvService = require('./pv-service')
 
-const config = getConfig();
+const config = configService.getConfig();
 const device = new TuyAPI({
     id: config.id,
     key: config.key
@@ -12,7 +12,7 @@ const device = new TuyAPI({
 
 var job = new CronJob(
 	config.cron,
-	async () => await pv.measure(device)
+	async () => await pvService.measure(device)
 );
 
 (async () => {
@@ -21,11 +21,7 @@ var job = new CronJob(
     await device.connect();
     console.log('connected to ammeter');
 
-    console.log('starting cron-job...')
+    console.log('starting cron-job (' + config.cron + ')...')
     job.start();
 })();
 
-function getConfig() {
-    let rawConfig = fs.readFileSync('config.json');
-    return JSON.parse(rawConfig);
-}
