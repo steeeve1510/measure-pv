@@ -1,38 +1,44 @@
 const { GoogleSpreadsheet } = require('google-spreadsheet');
-const configService = require('./config-service');
+const configService = require('../config-service');
 
 module.exports = {store};
 
 async function store(data) {
-    const year = data.date.getFullYear() + '';
+    const year = data.timestamp.getFullYear() + '';
     const config = configService.getConfig();
     const googleConfig = configService.getGoogleConfig();
     const doc = new GoogleSpreadsheet(config.spreadsheet[year]);
 
-    // console.debug('connecting to spreadsheet (' + year + ')...');
     await doc.useServiceAccountAuth({
         client_email: googleConfig.client_email,
         private_key: googleConfig.private_key,
     });
-    // console.debug('connected to spreadsheet');
 
     await doc.loadInfo();
-    const sheetTitle = getSheetTitle(data.date);
+    const sheetTitle = getSheetTitle(data.timestamp);
     var sheet = doc.sheetsByTitle[sheetTitle];
     if (sheet == null) {
-        // console.debug('creating new sheet: ' + sheetTitle);
         sheet = await doc.addSheet({ title: sheetTitle });
     }
 
-    // console.debug('storing data...');
-    await sheet.setHeaderRow(['Timestamp', 'Power in W', 'Voltage in V', 'Current in mA']);
+    await sheet.setHeaderRow([
+        'Timestamp',
+        'Power in W',
+        'Voltage in V',
+        'Current in mA',
+        'Energy in Ws (LRAM)',
+        'Energy in Ws (RRAM)',
+        'Energy in Ws (MRAM)'
+    ]);
     await sheet.addRow({
-        "Timestamp": data.date.toISOString(),
+        "Timestamp": data.timestamp.toISOString(),
         "Power in W": data.power,
         "Voltage in V": data.voltage,
-        "Current in mA": data.current
+        "Current in mA": data.current,
+        'Energy in Ws (LRAM)': data.energyLRAM,
+        'Energy in Ws (RRAM)': data.energyRRAM,
+        'Energy in Ws (MRAM)': data.energyMRAM
     });
-    // console.debug('data stored');
 }
 
 function getSheetTitle(timestamp) {
