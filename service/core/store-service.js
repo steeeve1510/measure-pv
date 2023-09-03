@@ -26,18 +26,18 @@ async function store(data) {
         'Power in W',
         'Voltage in V',
         'Current in mA',
-        'Energy in Ws (LRAM)',
-        'Energy in Ws (RRAM)',
-        'Energy in Ws (MRAM)'
+        'Energy in Wm (LRAM)',
+        'Energy in Wm (RRAM)',
+        'Energy in Wm (MRAM)'
     ]);
     await sheet.addRow({
         "Timestamp": data.timestamp.toISOString(),
         "Power in W": data.power,
         "Voltage in V": data.voltage,
         "Current in mA": data.current,
-        'Energy in Ws (LRAM)': data.energyLRAM,
-        'Energy in Ws (RRAM)': data.energyRRAM,
-        'Energy in Ws (MRAM)': data.energyMRAM
+        'Energy in Wm (LRAM)': data.energyLRAM,
+        'Energy in Wm (RRAM)': data.energyRRAM,
+        'Energy in Wm (MRAM)': data.energyMRAM
     });
 }
 
