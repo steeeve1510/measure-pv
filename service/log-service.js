@@ -1,11 +1,11 @@
 
 module.exports = {log};
 
-async function log(now, data) {
+async function log(data) {
     console.log(
-        now.toISOString(), '-',
-        'Power:', data.power + 'W',
-        'Voltage:', data.voltage + 'V',
+        data.date.toISOString(), '-',
+        'Power:', data.power + 'W,',
+        'Voltage:', data.voltage + 'V,',
         'Current:', data.current + 'mA'
     );
 }

@@ -2,10 +2,11 @@
 module.exports = {getData};
 
 async function getData(device) {
+    const date = new Date();
     const power = await getPower(device);
     const voltage = await getVoltage(device);
     const current = await getCurrent(device);
-    return {power, voltage, current};
+    return {date, power, voltage, current};
 }
 
 async function getVoltage(device) {
