@@ -7,8 +7,8 @@ async function log(data) {
         'Power:', data.power + 'W,',
         'Voltage:', data.voltage + 'V,',
         'Current:', data.current + 'mA,',
-        'Energy (LRAM): ', data.energyLRAM + 'Ws,',
-        'Energy (RRAM): ', data.energyRRAM + 'Ws,',
-        'Energy (MRAM): ', data.energyMRAM + 'Ws',
+        'Energy (LRAM): ', data.energyLRAM + 'Wm,',
+        'Energy (RRAM): ', data.energyRRAM + 'Wm,',
+        'Energy (MRAM): ', data.energyMRAM + 'Wm',
     );
 }
