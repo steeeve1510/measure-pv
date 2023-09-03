@@ -4,7 +4,7 @@ Description=Measures the current PV power and stores it in Google Spreasheets
 [Service]
 User=stefan
 WorkingDirectory=/home/stefan/measure-pv
-ExecStart=/usr/bin/nodejs app.js
+ExecStart=/usr/bin/node app.js
 Restart=always
 
 [Install]
