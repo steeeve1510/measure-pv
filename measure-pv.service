@@ -1,13 +1,14 @@
 [Unit]
 Description=Measures the current PV power and stores it in Google Spreasheets
+After=network.target
+StartLimitIntervalSec=0
 
 [Service]
-User=stefan
+User=root
 WorkingDirectory=/home/stefan/measure-pv
 ExecStart=/usr/bin/node app.js
 Restart=always
+RestartSec=1
 
 [Install]
-After=network-online.target
-Wants=network-online.target
-
+WantedBy=multi-user.target
