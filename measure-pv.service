@@ -8,4 +8,6 @@ ExecStart=/usr/bin/node app.js
 Restart=always
 
 [Install]
-RequiredBy=network-online.target
+After=network-online.target
+Wants=network-online.target
+
