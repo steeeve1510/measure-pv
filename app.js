@@ -12,7 +12,10 @@ const device = new TuyAPI({
 
 var job = new CronJob(
 	config.cron,
-	async () => await pvService.measure(device)
+	async () => await pvService.measure(device),
+    null,
+    false,
+    'Europe/Vienna'
 );
 
 (async () => {
