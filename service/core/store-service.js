@@ -31,7 +31,7 @@ async function store(data) {
         'Energy in Wm (MRAM)'
     ]);
     await sheet.addRow({
-        "Timestamp": data.timestamp.toISOString(),
+        "Timestamp": data.timestamp.toLocaleString('de-DE', {timeZone: 'Europe/Vienna'}),
         "Power in W": data.power,
         "Voltage in V": data.voltage,
         "Current in mA": data.current,

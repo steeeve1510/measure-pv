@@ -3,7 +3,7 @@ module.exports = {log};
 
 async function log(data) {
     console.log(
-        data.timestamp.toISOString(), '-',
+        data.timestamp.toLocaleString('de-DE', {timeZone: 'Europe/Vienna'}), '-',
         'Power:', data.power + 'W,',
         'Voltage:', data.voltage + 'V,',
         'Current:', data.current + 'mA,',
