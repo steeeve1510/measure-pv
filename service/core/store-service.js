@@ -4,11 +4,12 @@ const configService = require('../config-service');
 module.exports = { store };
 
 async function store(data) {
-    const year = data.timestamp.getFullYear() + '';
-    const config = configService.getConfig();
-    const googleConfig = configService.getGoogleConfig();
-    const doc = new GoogleSpreadsheet(config.spreadsheet[year]);
 
+    const documentTitle = getDocumentTitle(data.timestamp)
+    const config = configService.getConfig();
+    const doc = new GoogleSpreadsheet(config.spreadsheet[documentTitle]);
+
+    const googleConfig = configService.getGoogleConfig();
     await doc.useServiceAccountAuth({
         client_email: googleConfig.client_email,
         private_key: googleConfig.private_key,
@@ -41,13 +42,31 @@ async function store(data) {
     });
 }
 
+function getDocumentTitle(timestamp) {
+    const year = timestamp.getFullYear();
+    if (year <= 2023) {
+        return year + ''
+    }
+
+    const weekOfTheYear = getWeekOfTheYear(timestamp)
+    const number = Math.ceil(weekOfTheYear / 10)
+    if (number > 5) {
+        return year + '_' + 5
+    }
+    return year + '_' + number
+}
+
 function getSheetTitle(timestamp) {
-    const startDate = new Date(timestamp.getFullYear(), 0, 1);
-    const days = Math.floor((timestamp - startDate) /
-        (24 * 60 * 60 * 1000));
-    const weekOfTheYear = Math.ceil(days / 7);
+    const weekOfTheYear = getWeekOfTheYear(timestamp)
     if (weekOfTheYear < 10) {
         return '0' + weekOfTheYear.toString();
     }
-    return weekOfTheYear.toString();;
+    return weekOfTheYear.toString();
+}
+
+function getWeekOfTheYear(timestamp) {
+    const startDate = new Date(timestamp.getFullYear(), 0, 1);
+    const days = Math.floor((timestamp - startDate) /
+        (24 * 60 * 60 * 1000));
+    return Math.ceil(days / 7);
 }
