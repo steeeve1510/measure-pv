@@ -1,11 +1,11 @@
 
-module.exports = {calculate};
+module.exports = { calculate };
 
 function calculate(previousData, data) {
     if (!previousData) {
         return {
             energyLRAM: 0,
-            energyRRAM: 0,  
+            energyRRAM: 0,
             energyMRAM: 0
         };
     }
@@ -19,7 +19,7 @@ function calculate(previousData, data) {
     const energyLRAM = previousPower * duration;
     const energyRRAM = currentPower * duration;
     const energyMRAM = averagePower * duration;
-    return {energyLRAM, energyRRAM, energyMRAM};
+    return { energyLRAM, energyRRAM, energyMRAM };
 }
 
 function getDurationInMinutes(previousData, data) {

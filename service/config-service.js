@@ -1,7 +1,7 @@
 
 const fs = require('fs')
 
-module.exports = {getConfig, getGoogleConfig};
+module.exports = { getConfig, getGoogleConfig };
 
 function getConfig() {
     let rawConfig = fs.readFileSync('config/config.json');

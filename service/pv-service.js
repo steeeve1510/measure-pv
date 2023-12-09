@@ -5,7 +5,7 @@ const logService = require('./core/log-service');
 const cache = require('./utll/cache');
 const energyService = require('./core/energy-service');
 
-module.exports = {measure};
+module.exports = { measure };
 
 async function measure(device) {
     const previousData = cache.get();
@@ -18,7 +18,11 @@ async function measure(device) {
     }
 
     logService.log(dataWithEnergy);
-    await storeService.store(dataWithEnergy);
-    
+    try {
+        await storeService.store(dataWithEnergy);
+    } catch (e) {
+        console.error("Could not store measurement: " + e.message)
+    }
+
     cache.set(dataWithEnergy);
 }

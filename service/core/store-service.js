@@ -1,7 +1,7 @@
 const { GoogleSpreadsheet } = require('google-spreadsheet');
 const configService = require('../config-service');
 
-module.exports = {store};
+module.exports = { store };
 
 async function store(data) {
     const year = data.timestamp.getFullYear() + '';
@@ -31,7 +31,7 @@ async function store(data) {
         'Energy in Wm (MRAM)'
     ]);
     await sheet.addRow({
-        "Timestamp": data.timestamp.toLocaleString('de-DE', {timeZone: 'Europe/Vienna'}),
+        "Timestamp": data.timestamp.toLocaleString('de-DE', { timeZone: 'Europe/Vienna' }),
         "Power in W": data.power,
         "Voltage in V": data.voltage,
         "Current in mA": data.current,

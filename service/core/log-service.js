@@ -1,9 +1,9 @@
 
-module.exports = {log};
+module.exports = { log };
 
 async function log(data) {
     console.log(
-        data.timestamp.toLocaleString('de-DE', {timeZone: 'Europe/Vienna'}), '-',
+        data.timestamp.toLocaleString('de-DE', { timeZone: 'Europe/Vienna' }), '-',
         'Power:', data.power + 'W,',
         'Voltage:', data.voltage + 'V,',
         'Current:', data.current + 'mA,',
