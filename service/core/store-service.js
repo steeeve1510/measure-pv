@@ -65,7 +65,7 @@ function getSheetTitle(timestamp) {
 }
 
 function getWeekOfTheYear(timestamp) {
-    const startDate = new Date(timestamp.getFullYear(), 0, 1);
+    const startDate = new Date(timestamp.getFullYear(), 0, 0);
     const days = Math.floor((timestamp - startDate) /
         (24 * 60 * 60 * 1000));
     return Math.ceil(days / 7);
